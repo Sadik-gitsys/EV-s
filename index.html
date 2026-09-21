@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Electric Car Price Prediction</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #374151;
+        }
+
+        #result {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Electric Car Price Prediction</h1>
+
+    <label>Acceleration (Sec)</label>
+    <input type="number" id="AccelSec" step="0.1">
+
+    <label>Top Speed (Km/h)</label>
+    <input type="number" id="TopSpeed_KmH">
+
+    <label>Range (Km)</label>
+    <input type="number" id="Range_Km">
+
+    <label>Efficiency (Wh/Km)</label>
+    <input type="number" id="Efficiency_WhKm">
+
+    <label>Fast Charge (Km/h)</label>
+    <input type="number" id="FastCharge_KmH">
+
+    <label>Seats</label>
+    <input type="number" id="Seats">
+
+    <label>Rapid Charge</label>
+    <select id="RapidCharge">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+
+    <label>Power Train</label>
+    <select id="PowerTrain">
+        <option value="AWD">AWD</option>
+        <option value="RWD">RWD</option>
+        <option value="FWD">FWD</option>
+    </select>
+
+    <label>Plug Type</label>
+    <select id="PlugType">
+        <option value="Type 2 CCS">Type 2 CCS</option>
+        <option value="Type 2">Type 2</option>
+        <option value="Type 1 CHAdeMO">Type 1 CHAdeMO</option>
+    </select>
+
+    <label>Body Style</label>
+    <select id="BodyStyle">
+        <option value="Sedan">Sedan</option>
+        <option value="Hatchback">Hatchback</option>
+        <option value="SUV">SUV</option>
+        <option value="Liftback">Liftback</option>
+        <option value="Cabrio">Cabrio</option>
+        <option value="Pickup">Pickup</option>
+        <option value="SPV">SPV</option>
+        <option value="MPV">MPV</option>
+    </select>
+
+    <label>Segment</label>
+    <select id="Segment">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="N">N</option>
+        <option value="S">S</option>
+    </select>
+
+    <button onclick="predictPrice()">Predict Price</button>
+
+    <div id="result"></div>
+
+</div>
+
+
+<script>
+
+async function predictPrice() {
+
+    const data = {
+
+        AccelSec: Number(document.getElementById("AccelSec").value),
+
+        TopSpeed_KmH: Number(document.getElementById("TopSpeed_KmH").value),
+
+        Range_Km: Number(document.getElementById("Range_Km").value),
+
+        Efficiency_WhKm: Number(document.getElementById("Efficiency_WhKm").value),
+
+        FastCharge_KmH: Number(document.getElementById("FastCharge_KmH").value),
+
+        Seats: Number(document.getElementById("Seats").value),
+
+        RapidCharge: document.getElementById("RapidCharge").value,
+
+        PowerTrain: document.getElementById("PowerTrain").value,
+
+        PlugType: document.getElementById("PlugType").value,
+
+        BodyStyle: document.getElementById("BodyStyle").value,
+
+        Segment: document.getElementById("Segment").value
+    };
+
+
+    const response = await fetch("/predict", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(data)
+
+    });
+
+
+    const result = await response.json();
+
+
+    document.getElementById("result").innerHTML =
+        "Predicted Price: €" + result.predicted_price;
+
+}
+
+</script>
+
+</body>
+</html>
